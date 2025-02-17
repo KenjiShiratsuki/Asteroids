@@ -2,6 +2,8 @@ import pygame
 from constants import *
 def main():
     pygame.init()
+    clock = pygame.time.Clock()
+    dt = 0
     print("Starting asteroids!")
     print(SCREEN_WIDTH)
     print(SCREEN_HEIGHT)
@@ -12,5 +14,6 @@ def main():
                 return
         screen.fill((0,0,0))
         pygame.display.flip()
+        clock.tick(60)
 if __name__ == "__main__":
     main()
