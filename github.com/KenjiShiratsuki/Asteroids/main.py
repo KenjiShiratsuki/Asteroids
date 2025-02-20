@@ -5,7 +5,12 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import *
 def main():
+    running = True
+    paused = False
     pygame.init()
+    font = pygame.font.Font(None, 74)
+    pause_text = font.render("PAUSED", True, ("white"))
+    text_rect = pause_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
     clock = pygame.time.Clock()
     dt = 0
     print("Starting asteroids!")
@@ -20,14 +25,25 @@ def main():
     AsteroidField.containers = (updatable)
     field = AsteroidField()
     player = Player(x=SCREEN_WIDTH/2,y=SCREEN_HEIGHT/2)
-    while True:
+    while running == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
-        updatable.update(dt)
+                running = False
+                print("Exited game")
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:  # 'P' key toggles pause
+                    paused = not paused
+        if not paused:
+            updatable.update(dt)
+            for obj in asteroids:
+                if obj.collisioncheck(player) == True:
+                    running = False
+                    print("Game over!")     
         screen.fill("black")
         for obj in drawable:   
             obj.draw(screen)
+        if paused:
+            screen.blit(pause_text, text_rect)
         pygame.display.flip()
         dt = clock.tick(60)/1000
 if __name__ == "__main__":
